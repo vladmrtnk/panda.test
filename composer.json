@@ -1,0 +1,13 @@
+{
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "require": {
+        "symfony/routing": "^6.0",
+        "symfony/http-foundation": "^6.0",
+        "twbs/bootstrap": "^5.3",
+        "ext-pdo": "*"
+    }
+}
