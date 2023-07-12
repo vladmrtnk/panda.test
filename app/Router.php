@@ -29,17 +29,15 @@ class Router
             $parameters = $matcher->match($request->getPathInfo());
 
             /* Check if authorised */
-            $route = explode('-', array_pop($parameters));
-            if (!isset($_SESSION[AUTHENTICATED_USER]) || !$_SESSION[AUTHENTICATED_USER]) {
-                if ($route[0] != 'login') {
-                    header('Location: /login');
-                    exit;
+            $route = explode('-', array_pop($parameters))[0];
+            if ($route == 'login' || $route == 'register') {
+                if (isset($_SESSION[AUTHENTICATED_USER]) && $_SESSION[AUTHENTICATED_USER]) {
+                    header('Location: /');
+                    die;
                 }
             } else {
-                if ($route[0] == 'sign') {
-                    header('Location: /');
-                    exit;
-                }
+                header('Location: /login');
+                die;
             }
 
             call_user_func([$parameters[0], $parameters[1]], end($parameters));
