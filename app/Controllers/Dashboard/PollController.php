@@ -10,6 +10,8 @@ class PollController
 {
     public function index(): void
     {
+        $polls = (new Poll())->getAll();
+
         require_once APP_ROOT . '/views/dashboard/poll/index.php';
     }
 
@@ -24,5 +26,8 @@ class PollController
 
         $poll = new Poll($data);
         $poll->saveWithRelations();
+
+        header('Location: /dashboard/poll');
+        die;
     }
 }

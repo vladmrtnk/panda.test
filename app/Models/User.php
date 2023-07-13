@@ -3,22 +3,21 @@
 namespace App\Models;
 
 use App\DB;
-use DateTime;
 use PDO;
 
 class User
 {
-    public $id;
-    public $email;
-    private $password;
-    public $created_at;
-    public $updated_at;
+    public int $id;
+    public ?string $email;
+    private ?string $password;
+    public string $created_at;
+    public string $updated_at;
 
     /**
      * @param string|array|null $email
      * @param string|null       $password
      */
-    public function __construct(string|array $email = null, string $password = null)
+    public function __construct(string|array|null $email = null, string $password = null)
     {
         if (is_array($email)) {
             $this->email = $email['email'];
@@ -30,13 +29,23 @@ class User
     }
 
     /**
+     * Get current authenticated user id
+     *
+     * @return int
+     */
+    public static function getCurrentId(): int
+    {
+        return $_SESSION[AUTHENTICATED_USER];
+    }
+
+    /**
      * Find user by ID or Email
      *
      * @param int|string $needle
      *
      * @return User
      */
-    public static function find($needle)
+    public static function find(int|string $needle): User
     {
         $db = DB::getConection();
 
@@ -68,9 +77,8 @@ class User
         $db = DB::getConection();
 
         $query = $db->query("SELECT id FROM users WHERE email = '$email'");
-        $userIsset = (bool)$query->fetch(PDO::FETCH_ASSOC);
 
-        return $userIsset;
+        return (bool)$query->fetch(PDO::FETCH_ASSOC);
     }
 
     /**

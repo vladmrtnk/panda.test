@@ -11,17 +11,19 @@ CREATE TABLE users
 CREATE TABLE polls
 (
     id         int          NOT NULL AUTO_INCREMENT,
+    user_id    int          NOT NULL,
     title      varchar(255) NOT NULL,
     published  tinyint(1)   NOT NULL DEFAULT 0,
     created_at datetime,
     updated_at datetime,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 CREATE TABLE poll_questions
 (
     id         int          NOT NULL AUTO_INCREMENT,
-    poll_id int          NOT NULL,
+    poll_id    int          NOT NULL,
     title      varchar(255) NOT NULL,
     created_at datetime,
     updated_at datetime,
