@@ -87,6 +87,8 @@ class User
             "INSERT INTO users (email, password, created_at, updated_at) VALUES ('$this->email', '$hash', '$created_at', '$created_at')"
         );
         $this->id = $db->lastInsertId('users');
+        $this->created_at = $created_at;
+        $this->updated_at = $created_at;
 
         return (bool)$query;
     }

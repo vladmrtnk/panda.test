@@ -29,7 +29,7 @@ class RegisterController
         $user = new User($validated);
         if ($user->save()) {
             $_SESSION[AUTHENTICATED_USER] = $user->id;
-            header('Location: /dashboardw');
+            header('Location: /dashboard');
         }
     }
 }

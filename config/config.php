@@ -4,7 +4,7 @@ const SITE_NAME = 'Panda Test';
 
 /* App Root */
 define("APP_ROOT", dirname(__FILE__, 2));
-const URL_ROOT = '';
+const URL_ROOT = 'http://panda.ddev.site';
 
 /* DB Params */
 const DB_HOST = 'db';

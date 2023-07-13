@@ -14,7 +14,7 @@ use Symfony\Component\Routing\RouteCollection;
 class Router
 {
     /**
-     * @param  RouteCollection  $routes
+     * @param RouteCollection $routes
      *
      * @return void
      */
@@ -30,14 +30,16 @@ class Router
 
             /* Check if authorised */
             $route = explode('-', array_pop($parameters))[0];
-            if ($route == 'login' || $route == 'register') {
-                if (isset($_SESSION[AUTHENTICATED_USER]) && $_SESSION[AUTHENTICATED_USER]) {
+            if (isset($_SESSION[AUTHENTICATED_USER]) && $_SESSION[AUTHENTICATED_USER]) {
+                if ($route == 'login' || $route == 'register') {
                     header('Location: /');
                     die;
                 }
             } else {
-                header('Location: /login');
-                die;
+                if ($route != 'login' && $route != 'register' && $route != 'home') {
+                    header('Location: /login');
+                    die;
+                }
             }
 
             call_user_func([$parameters[0], $parameters[1]], end($parameters));
