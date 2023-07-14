@@ -9,10 +9,8 @@ class DB
     /**
      * @return PDO
      */
-    public static function getConection()
+    public static function getConnection(): PDO
     {
-        $connection = new PDO('mysql:host=' . DB_HOST . ';' . 'dbname=' . DB_NAME, DB_USER, DB_PASS);
-
-        return $connection;
+        return new PDO('mysql:host=' . DB_HOST . ';' . 'dbname=' . DB_NAME, DB_USER, DB_PASS);
     }
 }

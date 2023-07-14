@@ -4,7 +4,12 @@ namespace App\Controllers;
 
 class HomeController
 {
-    public function index()
+    /**
+     * Display unauthorized home page
+     *
+     * @return void
+     */
+    public function index(): void
     {
         require_once APP_ROOT . '/views/index.php';
     }

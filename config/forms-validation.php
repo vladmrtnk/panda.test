@@ -12,7 +12,6 @@ const MESSAGE_SUCCESS = 'success';
 /* Error names */
 const SIGN_IN_ERROR = 'sign_in_error';
 const INVALID_EMAIL = 'invalid_email';
-const INVALID_NAME = 'invalid_name';
 const INVALID_PASSWORDS = 'invalid_passwords';
 
 const INVALID_POLL_TITLE = 'invalid_poll_title';

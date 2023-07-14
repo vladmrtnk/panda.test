@@ -11,13 +11,13 @@
 
 <div class="container">
     <header class="d-flex justify-content-between py-3 gap-2">
-        <h1><a href="<?= URL_ROOT . '/dashboard' ?>" class="link-info">poller.online</a></h1>
+        <h1><a href="<?= URL_ROOT . '/dashboard' ?>" class="link-info"><?= SITE_NAME ?></a></h1>
 
         <div>
             <?php if (!isset($_SESSION[AUTHENTICATED_USER]) || !$_SESSION[AUTHENTICATED_USER]): ?>
                 <a href="<?= URL_ROOT . '/login' ?>" class="btn btn-outline-primary">Sign-in</a>
                 <a href="<?= URL_ROOT . '/register' ?>" class="btn btn-primary">Sign-up</a>
-            <?php elseif($_SESSION[AUTHENTICATED_USER]): ?>
+            <?php else: ?>
                 <a href="<?= URL_ROOT . '/dashboard/poll' ?>" class="btn btn-primary">My polls</a>
                 <a href="<?= URL_ROOT . '/dashboard/poll/create' ?>" class="btn btn-primary">Create poll</a>
                 <a href="<?= URL_ROOT . '/logout' ?>" class="btn btn-outline-primary">Logout</a>

@@ -9,6 +9,13 @@ use App\Requests\Request;
 
 class LoginRequest extends Request
 {
+    /**
+     * Validation login form data
+     *
+     * @param array $data
+     *
+     * @return array|null
+     */
     static function validated(array $data): ?array
     {
         //Get valid email or false

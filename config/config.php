@@ -1,6 +1,6 @@
 <?php
 /* Site name */
-const SITE_NAME = 'Panda Test';
+const SITE_NAME = 'poller.online';
 
 /* App Root */
 define("APP_ROOT", dirname(__FILE__, 2));

@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Models\Poll;
+namespace App\Models;
 
 use App\DB;
 use Exception;
-use App\Models\User;
 use PDO;
 
 class Poll
@@ -32,9 +31,16 @@ class Poll
         }
     }
 
+    /**
+     * Get poll model by ID
+     *
+     * @param $id
+     *
+     * @return \App\Models\Poll
+     */
     public static function getById($id): Poll
     {
-        $db = DB::getConection();
+        $db = DB::getConnection();
 
         $resultQuery = $db->query("SELECT * FROM polls WHERE id = $id");
         $result = $resultQuery->fetchAll(PDO::FETCH_ASSOC)[0];
@@ -50,9 +56,14 @@ class Poll
         return $poll;
     }
 
+    /**
+     * Get list of polls data without pagination
+     *
+     * @return array
+     */
     public static function getList(): array
     {
-        $db = DB::getConection();
+        $db = DB::getConnection();
 
         $resultQuery = $db->query(
             "SELECT p.id, p.title, p.published, p.created_at, COUNT(pvh.question_id) as votes
@@ -61,14 +72,36 @@ class Poll
                 GROUP BY p.id"
         );
 
-        $result = $resultQuery->fetchAll(PDO::FETCH_ASSOC);
-
-        return $result;
+        return $resultQuery->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public static function storeVotes(int $pollId, array $votes)
+    /**
+     * Get list of polls by user id without pagination
+     *
+     * @param int $userId
+     *
+     * @return array
+     */
+    public static function getListByUserId(int $userId): array
     {
-        $db = DB::getConection();
+        $db = DB::getConnection();
+
+        $resultQuery = $db->query("SELECT id, title, published, created_at FROM polls WHERE user_id = $userId");
+
+        return $resultQuery->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Store chosen votes
+     *
+     * @param int   $pollId
+     * @param array $votes
+     *
+     * @return void
+     */
+    public static function storeVotes(int $pollId, array $votes): void
+    {
+        $db = DB::getConnection();
         $userId = User::getCurrentId();
         $created_at = date('Y-m-d h:i:s');
 
@@ -76,14 +109,16 @@ class Poll
             $db->beginTransaction();
 
             foreach ($votes as $questionId => $answerId) {
-                $db->exec("INSERT INTO poll_voting_history (poll_id, question_id, answer_id, user_id, created_at, updated_at) 
-                    VALUES ('$pollId', '$questionId', '$answerId', '$userId', '$created_at', '$created_at')");
+                $db->exec(
+                    "INSERT INTO poll_voting_history (poll_id, question_id, answer_id, user_id, created_at, updated_at) 
+                    VALUES ('$pollId', '$questionId', '$answerId', '$userId', '$created_at', '$created_at')"
+                );
 
                 $db->exec("UPDATE poll_answers SET votes = votes + 1 WHERE id = $answerId");
             }
 
             $db->commit();
-        } catch (Exception $e) {
+        } catch (Exception) {
             $db->rollBack();
         }
     }
@@ -91,11 +126,13 @@ class Poll
     /**
      * Save all poll data with relationships
      *
-     * @return $this
+     * @param int $userId
+     *
+     * @return void
      */
     public function saveWithRelations(int $userId): void
     {
-        $db = DB::getConection();
+        $db = DB::getConnection();
         $created_at = date('Y-m-d h:i:s');
         $isPublished = (int)$this->published;
 
@@ -124,67 +161,31 @@ class Poll
             }
 
             $db->commit();
-        } catch (Exception $e) {
+        } catch (Exception) {
             $db->rollBack();
         }
     }
 
     /**
-     * @param int $userId
+     * Get array of related questions to the poll
      *
      * @return array
      */
-    public function getAllByUserId(int $userId): array
+    public function getQuestions(): array
     {
-        $db = DB::getConection();
+        $db = DB::getConnection();
 
         $resultQuery = $db->query(
-            "
-            SELECT p.title AS pt,
-                   p.published,
-                   pq.title AS pqt,
-                   pq.poll_id,
-                   pa.id,
-                   pa.title AS pat,
-                   pa.question_id,
-                   pa.votes
-            FROM polls AS p
-            JOIN poll_questions AS pq ON p.id = pq.poll_id
-            JOIN poll_answers AS pa ON pq.id = pa.question_id
-            WHERE user_id = '$userId'
-        "
+            "SELECT pq.id AS question_id,
+            pq.title AS question_title,
+            pa.id AS answer_id,
+            pa.title AS answer_title
+        FROM poll_questions AS pq
+        JOIN poll_answers AS pa ON pq.id = pa.question_id
+        WHERE pq.poll_id = $this->id"
         );
 
         $result = $resultQuery->fetchAll(PDO::FETCH_ASSOC);
-
-        $data = [];
-        foreach ($result as $value) {
-            $data[$value['poll_id']]['title'] = $value['pt'];
-            $data[$value['poll_id']]['questions'][$value['question_id']]['title'] = $value['pqt'];
-            $data[$value['poll_id']]['questions'][$value['question_id']]['answers'][$value['id']] = $value['pat'];
-        }
-
-        return $data;
-    }
-
-    public function getQuestions()
-    {
-        $db = DB::getConection();
-
-        $resultQuery = $db->query(
-            "
-            SELECT pq.id AS question_id,
-                   pq.title AS question_title,
-                   pa.id AS answer_id,
-                   pa.title AS answer_title
-            FROM poll_questions AS pq
-            JOIN poll_answers AS pa ON pq.id = pa.question_id
-            WHERE pq.poll_id = $this->id
-        "
-        );
-
-        $result = $resultQuery->fetchAll(PDO::FETCH_ASSOC);
-
 
         $data = [];
         foreach ($result as $value) {
@@ -195,27 +196,15 @@ class Poll
         return $data;
     }
 
-    public function getAllForDashboard(int $userId): array
-    {
-        $db = DB::getConection();
-
-        $resultQuery = $db->query("SELECT id, title, published, created_at FROM polls WHERE user_id = $userId");
-        $result = $resultQuery->fetchAll(PDO::FETCH_ASSOC);
-
-        return $result;
-    }
-
     /**
      * Publish current poll
      *
-     * @return bool
+     * @return void
      */
-    public function publish(): bool
+    public function publish(): void
     {
-        $db = DB::getConection();
+        $db = DB::getConnection();
 
-        $result = $db->query("UPDATE polls SET published = 1 WHERE id = $this->id");
-
-        return (bool)$result;
+        $db->query("UPDATE polls SET published = 1 WHERE id = $this->id");
     }
 }

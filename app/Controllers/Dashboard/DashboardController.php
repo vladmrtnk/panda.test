@@ -2,11 +2,15 @@
 
 namespace App\Controllers\Dashboard;
 
-use App\Models\Poll\Poll;
-use App\Models\User;
+use App\Models\Poll;
 
 class DashboardController
 {
+    /**
+     * Display main dashboard page
+     *
+     * @return void
+     */
     public function index(): void
     {
         $polls = Poll::getList();

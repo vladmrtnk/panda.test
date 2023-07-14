@@ -2,27 +2,47 @@
 
 namespace App\Controllers\Dashboard;
 
-use App\Models\Poll\Poll;
+use App\Models\Poll;
 use App\Models\User;
+use App\Requests\PollRequest;
 
 class PollController
 {
+    /**
+     * Display page with authorized user polls
+     *
+     * @return void
+     */
     public function index(): void
     {
         $userId = User::getCurrentId();
-        $polls = (new Poll())->getAllForDashboard($userId);
+        $polls = Poll::getListByUserId($userId);
 
         require_once APP_ROOT . '/views/dashboard/poll/index.php';
     }
 
-    public function show(int $id)
+    /**
+     * Display single poll view
+     *
+     * @param int $id
+     *
+     * @return void
+     */
+    public function show(int $id): void
     {
         $poll = Poll::getById($id);
 
         require_once APP_ROOT . '/views/dashboard/poll/show.php';
     }
 
-    public function storeVotes(int $id)
+    /**
+     * Store chosen votes data
+     *
+     * @param int $id
+     *
+     * @return void
+     */
+    public function storeVotes(int $id): void
     {
         $data = $_POST;
 
@@ -32,24 +52,39 @@ class PollController
         die;
     }
 
+    /**
+     * Display creating polls view
+     *
+     * @return void
+     */
     public function create(): void
     {
         require_once APP_ROOT . '/views/dashboard/poll/create.php';
     }
 
-    public function store()
+    /**
+     * Store new poll
+     *
+     * @return void
+     */
+    public function store(): void
     {
-        $data = $_POST;
+        $validated = PollRequest::validated($_POST);
         $userId = User::getCurrentId();
 
-        $poll = new Poll($data);
+        $poll = new Poll($validated);
         $poll->saveWithRelations($userId);
 
         header('Location: /dashboard/poll');
         die;
     }
 
-    public function publish()
+    /**
+     * Publish poll
+     *
+     * @return void
+     */
+    public function publish(): void
     {
         $pollId = $_POST['id'];
 

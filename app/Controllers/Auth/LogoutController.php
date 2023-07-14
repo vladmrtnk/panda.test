@@ -5,6 +5,8 @@ namespace App\Controllers\Auth;
 class LogoutController
 {
     /**
+     * Logout authorized user
+     *
      * @return void
      */
     public function index(): void

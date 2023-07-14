@@ -9,6 +9,13 @@ use App\Requests\Request;
 
 class RegisterRequest extends Request
 {
+    /**
+     * Validation register form data
+     *
+     * @param array $data
+     *
+     * @return array|null
+     */
     static function validated(array $data): ?array
     {
         //Get valid email and password or false

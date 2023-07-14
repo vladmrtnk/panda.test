@@ -17,7 +17,6 @@
                 </thead>
                 <tbody>
                 <?php if(!empty($polls)): ?>
-                <?php /** @var array $polls */ ?>
                 <?php foreach ($polls as $poll): ?>
                 <tr>
                     <th scope="row"><?= $poll['title'] ?></th>

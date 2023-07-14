@@ -47,7 +47,7 @@ class User
      */
     public static function find(int|string $needle): User
     {
-        $db = DB::getConection();
+        $db = DB::getConnection();
 
         if (is_int($needle)) {
             $result = $db->query("SELECT * from users where id = $needle");
@@ -68,13 +68,15 @@ class User
     }
 
     /**
+     * Check if user exist
+     *
      * @param string $email
      *
      * @return bool
      */
     public static function exist(string $email): bool
     {
-        $db = DB::getConection();
+        $db = DB::getConnection();
 
         $query = $db->query("SELECT id FROM users WHERE email = '$email'");
 
@@ -82,11 +84,13 @@ class User
     }
 
     /**
+     * Save user data
+     *
      * @return bool
      */
     public function save(): bool
     {
-        $db = DB::getConection();
+        $db = DB::getConnection();
 
         $hash = password_hash($this->password, PASSWORD_DEFAULT);
         $created_at = date('Y-m-d h:i:s');
@@ -102,6 +106,8 @@ class User
     }
 
     /**
+     * Authenticate user
+     *
      * @param  $password
      *
      * @return bool

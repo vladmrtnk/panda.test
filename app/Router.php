@@ -26,7 +26,11 @@ class Router
 
         $matcher = new UrlMatcher($routes, $context);
         try {
-            $pathInfo = str_ends_with($request->getPathInfo(), '/') ? substr($request->getPathInfo(), 0, -1): $request->getPathInfo();
+            $pathInfo = str_ends_with($request->getPathInfo(), '/') ? substr(
+                $request->getPathInfo(),
+                0,
+                -1
+            ) : $request->getPathInfo();
 
             $parameters = $matcher->match($pathInfo);
 
@@ -47,10 +51,12 @@ class Router
             call_user_func([$parameters[0], $parameters[1]], end($parameters));
 
             $response = new Response(ob_get_clean());
-        } catch (MethodNotAllowedException $e) {
+        } catch (MethodNotAllowedException) {
             $response = new Response('Method Not Allowed', 405);
-        } catch (ResourceNotFoundException $e) {
+        } catch (ResourceNotFoundException) {
             $response = new Response('Not Found', 404);
+        } catch (Exception) {
+            $response = new Response('Internal Server Error', 500);
         }
 
         $response->send();

@@ -5,7 +5,7 @@ namespace App\Requests;
 abstract class Request
 {
     /**
-     * Class for validation of input data from forms
+     * Abstract class for validation of input data from forms
      *
      * @param array $data
      *

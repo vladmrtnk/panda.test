@@ -3,7 +3,7 @@
     <main class="container">
         <div class="row mb-2">
             <div class="mb-3 d-flex justify-content-between">
-                <?php /** @var \App\Models\Poll\Poll $poll */ ?>
+                <?php /** @var \App\Models\Poll $poll */ ?>
                 <h3><?= $poll->title ?></h3>
                 <div>
                     <a href="<?= URL_ROOT . '/dashboard/poll/create' ?>" class="btn btn-primary">Create poll</a>
