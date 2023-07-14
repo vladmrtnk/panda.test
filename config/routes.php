@@ -32,6 +32,7 @@ $routes->add('dashboard-poll-store-votes', (new Route('/dashboard/poll/{id}/stor
 $routes->add('dashboard-poll-create', (new Route('/dashboard/poll/create', [new PollController(), 'create']))->setMethods('GET'));
 $routes->add('dashboard-poll-store', (new Route('/dashboard/poll', [new PollController(), 'store']))->setMethods('POST'));
 $routes->add('dashboard-poll-publish', (new Route('/dashboard/poll/publish', [new PollController(), 'publish']))->setMethods('POST'));
+$routes->add('dashboard-poll-delete', (new Route('/dashboard/poll/{id}/delete', [new PollController(), 'delete'])));
 
 $routes->add('home', new Route('/', [new HomeController(), 'index']));
 

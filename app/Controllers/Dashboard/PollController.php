@@ -94,4 +94,20 @@ class PollController
         header('Location: /dashboard/poll');
         die;
     }
+
+    /**
+     * Delete poll
+     *
+     * @param int $id
+     *
+     * @return void
+     */
+    public function delete(int $id): void
+    {
+        $poll = Poll::getById($id);
+        $poll->delete();
+
+        header('Location: /dashboard/poll');
+        die;
+    }
 }

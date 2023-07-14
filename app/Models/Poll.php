@@ -69,7 +69,7 @@ class Poll
             "SELECT p.id, p.title, p.published, p.created_at, COUNT(pvh.question_id) as votes
                 FROM polls as p
                 LEFT JOIN poll_voting_history AS pvh ON p.id = pvh.poll_id
-                GROUP BY p.id"
+                GROUP BY p.id HAVING published = 1"
         );
 
         return $resultQuery->fetchAll(PDO::FETCH_ASSOC);
@@ -207,4 +207,17 @@ class Poll
 
         $db->query("UPDATE polls SET published = 1 WHERE id = $this->id");
     }
+
+    /**
+     * Delete poll
+     *
+     * @return void
+     */
+    public function delete(): void
+    {
+        $db = DB::getConnection();
+
+        $db->query("DELETE FROM polls WHERE id = $this->id");
+    }
+
 }

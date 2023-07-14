@@ -28,7 +28,7 @@
                         <?php if(!$poll['published']): ?>
                         <button name="id" value="<?= $poll['id'] ?>" class="btn btn-primary" form="publish_form">Publish</button>
                         <?php endif; ?>
-                        <button class="btn btn-danger">Remove</button>
+                        <a href="<?= URL_ROOT . '/dashboard/poll/' . $poll['id'] . '/delete' ?>" class="btn btn-danger">Remove</a>
                     </td>
                 </tr>
                 <?php endforeach; endif; ?>
