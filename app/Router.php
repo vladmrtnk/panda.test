@@ -26,7 +26,9 @@ class Router
 
         $matcher = new UrlMatcher($routes, $context);
         try {
-            $parameters = $matcher->match($request->getPathInfo());
+            $pathInfo = str_ends_with($request->getPathInfo(), '/') ? substr($request->getPathInfo(), 0, -1): $request->getPathInfo();
+
+            $parameters = $matcher->match($pathInfo);
 
             /* Check if authorised */
             $route = explode('-', array_pop($parameters))[0];
@@ -49,8 +51,6 @@ class Router
             $response = new Response('Method Not Allowed', 405);
         } catch (ResourceNotFoundException $e) {
             $response = new Response('Not Found', 404);
-        } catch (Exception $e) {
-            $response = new Response('Internal Server Error', 500);
         }
 
         $response->send();

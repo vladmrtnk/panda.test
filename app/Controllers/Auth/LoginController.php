@@ -29,7 +29,7 @@ class LoginController
         $user = User::find($validated['email']);
 
         if ($user->authenticate($_POST['password'])) {
-            header('Location: /dashboard/poll');
+            header('Location: /dashboard');
             die;
         }
     }

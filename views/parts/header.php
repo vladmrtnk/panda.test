@@ -10,16 +10,18 @@
 <body>
 
 <div class="container">
-    <header class="d-flex justify-content-between py-3">
+    <header class="d-flex justify-content-between py-3 gap-2">
+        <h1><a href="<?= URL_ROOT . '/dashboard' ?>" class="link-info">poller.online</a></h1>
 
-        <div class="col-md-3 text-end">
+        <div>
             <?php if (!isset($_SESSION[AUTHENTICATED_USER]) || !$_SESSION[AUTHENTICATED_USER]): ?>
-                <a href="<?php echo URL_ROOT . '/login' ?>" class="btn btn-outline-primary me-2">Sign-in</a>
-                <a href="<?php echo URL_ROOT . '/register' ?>" class="btn btn-primary">Sign-up</a>
+                <a href="<?= URL_ROOT . '/login' ?>" class="btn btn-outline-primary">Sign-in</a>
+                <a href="<?= URL_ROOT . '/register' ?>" class="btn btn-primary">Sign-up</a>
             <?php elseif($_SESSION[AUTHENTICATED_USER]): ?>
-                <a href="<?php echo URL_ROOT . '/logout' ?>" class="btn btn-outline-primary me-2">Logout</a>
+                <a href="<?= URL_ROOT . '/dashboard/poll' ?>" class="btn btn-primary">My polls</a>
+                <a href="<?= URL_ROOT . '/dashboard/poll/create' ?>" class="btn btn-primary">Create poll</a>
+                <a href="<?= URL_ROOT . '/logout' ?>" class="btn btn-outline-primary">Logout</a>
             <?php endif; ?>
         </div>
-
     </header>
 </div>

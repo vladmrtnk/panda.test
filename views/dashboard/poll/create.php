@@ -2,12 +2,12 @@
 
     <main class="container">
         <div class="d-flex justify-content-center">
-            <form class="w-75 p-5 border rounded" method="POST" enctype="multipart/form-data" action="<?php echo URL_ROOT . '/dashboard/poll' ?>">
+            <form class="w-75 p-5 border rounded" method="POST" enctype="multipart/form-data" action="<?= URL_ROOT . '/dashboard/poll' ?>">
 
                 <div class="mb-3">
                     <label for="title" class="form-label">Title</label>
-                    <input name="title" type="text" class="form-control <?php echo \App\Components\Message::hasErrors(INVALID_POLL_TITLE) ? 'is-invalid' : ''?>" id="title" placeholder="Input the title of poll" value="<?php echo \App\Components\FormData::getOldData('title') ?? '' ?>" required>
-                    <?php echo \App\Components\Message::show(INVALID_POLL_TITLE); ?>
+                    <input name="title" type="text" class="form-control <?= \App\Components\Message::hasErrors(INVALID_POLL_TITLE) ? 'is-invalid' : ''?>" id="title" placeholder="Input the title of poll" value="<?= \App\Components\FormData::getOldData('title') ?? '' ?>" required>
+                    <?= \App\Components\Message::show(INVALID_POLL_TITLE); ?>
                 </div>
 
                 <div id="questions">

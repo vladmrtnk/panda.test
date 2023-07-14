@@ -6,7 +6,7 @@ CREATE TABLE users
     created_at datetime,
     updated_at datetime,
     PRIMARY KEY (id)
-)
+);
 
 CREATE TABLE polls
 (
@@ -46,12 +46,14 @@ CREATE TABLE poll_answers
 CREATE TABLE poll_voting_history
 (
     id          int NOT NULL AUTO_INCREMENT,
+    poll_id     int NOT NULL,
     question_id int NOT NULL,
     answer_id   int NOT NULL,
     user_id     int NOT NULL,
     created_at  datetime,
     updated_at  datetime,
     PRIMARY KEY (id),
+    FOREIGN KEY (poll_id) REFERENCES polls (id),
     FOREIGN KEY (question_id) REFERENCES poll_questions (id),
     FOREIGN KEY (answer_id) REFERENCES poll_answers (id),
     FOREIGN KEY (user_id) REFERENCES users (id)
