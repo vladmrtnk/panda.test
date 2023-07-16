@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\DB;
+use Cassandra\Exception\UnauthorizedException;
 use PDO;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class User
 {
@@ -43,9 +45,10 @@ class User
      *
      * @param int|string $needle
      *
-     * @return User
+     * @return \App\Models\User|false
+     * @throws \Exception
      */
-    public static function find(int|string $needle): User
+    public static function find(int|string $needle): bool|User
     {
         $db = DB::getConnection();
 
@@ -56,6 +59,10 @@ class User
         }
 
         $data = $result->fetch(PDO::FETCH_ASSOC);
+
+        if (!$data) {
+            throw new \Exception('User is not found', 401);
+        }
 
         $user = new User();
         $user->id = $data['id'];
@@ -110,16 +117,17 @@ class User
      *
      * @param  $password
      *
-     * @return bool
+     * @return void
+     * @throws \Exception
      */
-    public function authenticate($password): bool
+    public function authenticate($password): void
     {
         $auth = password_verify($password, $this->password);
 
         if ($auth) {
             $_SESSION[AUTHENTICATED_USER] = $this->id;
+        } else {
+            throw new \Exception('Email or password is incorrect', 401);
         }
-
-        return $auth;
     }
 }

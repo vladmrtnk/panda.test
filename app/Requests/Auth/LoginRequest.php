@@ -27,7 +27,7 @@ class LoginRequest extends Request
 
         //If email invalid or user is not exist, show error
         FormData::setOldData($_POST);
-        Message::create(SIGN_IN_ERROR, 'Enter the correct email or password', MESSAGE_ERROR);
+        Message::create(SIGN_IN_ERROR, 'Email or password is incorrect', MESSAGE_ERROR);
 
         header('Location: /login');
         die;

@@ -17,7 +17,7 @@
                 <div class="form-check mb-2">
                     <input class="form-check-input" type="radio" name="<?= $questionId ?>" value="<?= $answerId ?>" id="answer-<?= $answerId ?>">
                     <label class="form-check-label" for="answer-<?= $answerId ?>">
-                        <?= $answer ?>
+                        <?= $answer['title'] ?>
                     </label>
                 </div>
                 <?php endforeach; endforeach; ?>

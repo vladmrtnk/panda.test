@@ -2,6 +2,8 @@
 
 namespace App\Controllers\Auth;
 
+use App\Components\FormData;
+use App\Components\Message;
 use App\Models\User;
 use App\Requests\Auth\LoginRequest;
 
@@ -26,11 +28,18 @@ class LoginController
     {
         $validated = LoginRequest::validated($_POST);
 
-        $user = User::find($validated['email']);
+        try {
+            $user = User::find($validated['email']);
+            $user->authenticate($_POST['password']);
+        } catch (\Exception $e) {
+            FormData::setOldData($_POST);
+            Message::create(SIGN_IN_ERROR, $e->getMessage(), MESSAGE_ERROR);
 
-        if ($user->authenticate($_POST['password'])) {
-            header('Location: /dashboard');
+            header('Location: /login');
             die;
         }
+
+        header('Location: /dashboard');
+        die;
     }
 }

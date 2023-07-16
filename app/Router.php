@@ -36,15 +36,17 @@ class Router
 
             /* Check if authorised */
             $route = explode('-', array_pop($parameters))[0];
-            if (isset($_SESSION[AUTHENTICATED_USER]) && $_SESSION[AUTHENTICATED_USER]) {
-                if ($route == 'login' || $route == 'register') {
-                    header('Location: /');
-                    die;
-                }
-            } else {
-                if ($route != 'login' && $route != 'register' && $route != 'home') {
-                    header('Location: /login');
-                    die;
+            if ($route != 'api') {
+                if (isset($_SESSION[AUTHENTICATED_USER]) && $_SESSION[AUTHENTICATED_USER]) {
+                    if ($route == 'login' || $route == 'register') {
+                        header('Location: /');
+                        die;
+                    }
+                } else {
+                    if ($route != 'login' && $route != 'register' && $route != 'home') {
+                        header('Location: /login');
+                        die;
+                    }
                 }
             }
 

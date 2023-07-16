@@ -9,6 +9,7 @@ use App\Controllers\HomeController;
 use App\Router;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use App\Controllers\Api\PollController as ApiPollController;
 
 
 $routes = new RouteCollection();
@@ -35,6 +36,12 @@ $routes->add('dashboard-poll-publish', (new Route('/dashboard/poll/publish', [ne
 $routes->add('dashboard-poll-delete', (new Route('/dashboard/poll/{id}/delete', [new PollController(), 'delete'])));
 
 $routes->add('home', new Route('/', [new HomeController(), 'index']));
+
+/*
+ * Api routes
+ */
+$routes->add('api-poll', (new Route('/api/poll', [new ApiPollController(), 'show']))->setMethods('GET'));
+
 
 $router = new Router();
 $router($routes);

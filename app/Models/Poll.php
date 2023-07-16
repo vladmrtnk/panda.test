@@ -5,6 +5,7 @@ namespace App\Models;
 use App\DB;
 use Exception;
 use PDO;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class Poll
 {
@@ -45,15 +46,7 @@ class Poll
         $resultQuery = $db->query("SELECT * FROM polls WHERE id = $id");
         $result = $resultQuery->fetchAll(PDO::FETCH_ASSOC)[0];
 
-        $poll = new Poll();
-        $poll->id = $result['id'];
-        $poll->user_id = $result['user_id'];
-        $poll->title = $result['title'];
-        $poll->published = $result['published'];
-        $poll->created_at = $result['created_at'];
-        $poll->updated_at = $result['updated_at'];
-
-        return $poll;
+        return self::setDataToModel($result);
     }
 
     /**
@@ -94,7 +87,7 @@ class Poll
     /**
      * Store chosen votes
      *
-     * @param int   $pollId
+     * @param int $pollId
      * @param array $votes
      *
      * @return void
@@ -121,6 +114,51 @@ class Poll
         } catch (Exception) {
             $db->rollBack();
         }
+    }
+
+    /**
+     * Get random poll by user id
+     *
+     * @param int $userId
+     *
+     * @return \App\Models\Poll
+     */
+    public static function getRandomByUserId(int $userId): Poll
+    {
+        $db = DB::getConnection();
+
+        $resultQuery = $db->query("SELECT * FROM polls WHERE user_id = $userId ORDER BY RAND() LIMIT 1");
+
+        $result = $resultQuery->fetchAll(PDO::FETCH_ASSOC);
+
+        if (empty($result)) {
+            throw new ResourceNotFoundException('User don\'t have any polls', 404);
+        }
+
+        $poll = self::setDataToModel($result[0]);
+        $poll->questions = $poll->getQuestions();
+
+        return $poll;
+    }
+
+    /**
+     * Set data to Poll object and return
+     *
+     * @param array $data
+     *
+     * @return \App\Models\Poll
+     */
+    private static function setDataToModel(array $data): Poll
+    {
+        $poll = new Poll();
+        $poll->id = $data['id'];
+        $poll->user_id = $data['user_id'];
+        $poll->title = $data['title'];
+        $poll->published = $data['published'];
+        $poll->created_at = $data['created_at'];
+        $poll->updated_at = $data['updated_at'];
+
+        return $poll;
     }
 
     /**
@@ -179,7 +217,8 @@ class Poll
             "SELECT pq.id AS question_id,
             pq.title AS question_title,
             pa.id AS answer_id,
-            pa.title AS answer_title
+            pa.title AS answer_title,
+            pa.votes AS answer_votes
         FROM poll_questions AS pq
         JOIN poll_answers AS pa ON pq.id = pa.question_id
         WHERE pq.poll_id = $this->id"
@@ -189,8 +228,13 @@ class Poll
 
         $data = [];
         foreach ($result as $value) {
-            $data[$value['question_id']]['title'] = $value['question_title'];
-            $data[$value['question_id']]['answers'][$value['answer_id']] = $value['answer_title'];
+            if (!array_key_exists($value['question_id'], $data)) {
+                $data[$value['question_id']]['title'] = $value['question_title'];
+            }
+            $data[$value['question_id']]['answers'][$value['answer_id']] = [
+                'title' => $value['answer_title'],
+                'votes' => $value['answer_votes']
+            ];
         }
 
         return $data;
