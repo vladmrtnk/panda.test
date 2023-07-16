@@ -7,7 +7,6 @@
     "require": {
         "symfony/routing": "^6.0",
         "symfony/http-foundation": "^6.0",
-        "ext-pdo": "*",
-        "ext-cassandra": "*"
+        "ext-pdo": "*"
     }
 }

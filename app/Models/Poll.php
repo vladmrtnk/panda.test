@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\DB;
+use App\Filters\FilterInterface;
+use App\Filters\PollFilter;
 use Exception;
 use PDO;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -71,15 +73,19 @@ class Poll
     /**
      * Get list of polls by user id without pagination
      *
-     * @param int $userId
+     * @param int   $userId
+     * @param array $filters
      *
      * @return array
      */
-    public static function getListByUserId(int $userId): array
+    public static function getListByUserId(int $userId, array $filters): array
     {
         $db = DB::getConnection();
 
-        $resultQuery = $db->query("SELECT id, title, published, created_at FROM polls WHERE user_id = $userId");
+        $filter = new PollFilter();
+        $sqlFilter = $filter->applyFilters($filters);
+
+        $resultQuery = $db->query("SELECT id, title, published, created_at FROM polls WHERE user_id = $userId $sqlFilter");
 
         return $resultQuery->fetchAll(PDO::FETCH_ASSOC);
     }

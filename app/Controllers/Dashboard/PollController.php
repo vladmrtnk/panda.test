@@ -16,7 +16,9 @@ class PollController
     public function index(): void
     {
         $userId = User::getCurrentId();
-        $polls = Poll::getListByUserId($userId);
+        $filters = $_GET ?? [];
+
+        $polls = Poll::getListByUserId($userId, $filters);
 
         require_once APP_ROOT . '/views/dashboard/poll/index.php';
     }

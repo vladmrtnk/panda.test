@@ -10,9 +10,15 @@
                 <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Published</th>
-                    <th scope="col">Created At</th>
+                    <?php if (isset($_GET['sort_by']) && isset($_GET['sort_order'])): ?>
+                    <th scope="col"><a href="<?= URL_ROOT . '/dashboard/poll/?sort_by=title'?><?= $_GET['sort_by'] == 'title' && $_GET['sort_order'] == 'asc' ? '&sort_order=desc' : '&sort_order=asc' ?>">Title</a></th>
+                    <th scope="col"><a href="<?= URL_ROOT . '/dashboard/poll/?sort_by=published'?><?= $_GET['sort_by'] == 'published' && $_GET['sort_order'] == 'asc' ? '&sort_order=desc' : '&sort_order=asc' ?>">Published</a></th>
+                    <th scope="col"><a href="<?= URL_ROOT . '/dashboard/poll/?sort_by=created_at'?><?= $_GET['sort_by'] == 'created_at' && $_GET['sort_order'] == 'asc' ? '&sort_order=desc' : '&sort_order=asc' ?>">Created At</a></th>
+                    <?php else: ?>
+                    <th scope="col"><a href="<?= URL_ROOT . '/dashboard/poll/?sort_by=title&sort_order=asc' ?>">Title</a></th>
+                    <th scope="col"><a href="<?= URL_ROOT . '/dashboard/poll/?sort_by=published&sort_order=asc' ?>">Published</a></th>
+                    <th scope="col"><a href="<?= URL_ROOT . '/dashboard/poll/?sort_by=created_at&sort_order=asc' ?>">Created At</a></th>
+                    <?php endif; ?>
                     <th scope="col">Handle</th>
                 </tr>
                 </thead>
